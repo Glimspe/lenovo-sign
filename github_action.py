@@ -4,7 +4,6 @@ import base64
 import os
 import random
 import re
-from sys import exit
 
 import smtplib
 from email.mime.text import MIMEText
@@ -70,7 +69,6 @@ def login(username, password):
         if login_response.json().get("ret") == "1":  # 账号或密码错误
             return None
         ck_dict = dict_from_cookiejar(session.cookies)
-        config["cookies"][username] = f"{ck_dict}"
         session.cookies = cookiejar_from_dict(ck_dict)
         return session
 
@@ -126,7 +124,7 @@ def sign(session):
 def main():
     global ua, username, config
     message = "联想签到: \n"
-    if not (ua := os.environ['UA']):
+    if not (ua := os.environ.get('UA')):
         ua = random.choice(USER_AGENT)
     account_secret = os.environ.get("ACCOUNT")
     if account_secret:
@@ -141,7 +139,7 @@ def main():
         print("No ACCOUNT secret found.")
     smtp = Email_message(os.environ['SENDER_EMAIL'], os.environ['SENDER_PASSWORD'], os.environ['RECEIVER_EMAIL'],
                          os.environ['SMTP_SERVER'], int(os.environ['SMTP_PORT']))
-    smtp.sender_email(message)
+    smtp.send_message(message)
 
 
 if __name__ == "__main__":
