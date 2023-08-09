@@ -4,11 +4,11 @@ import base64
 import os
 import random
 import re
-
 import smtplib
-from email.mime.text import MIMEText
-from smtplib import SMTP_SSL
+import ssl
 from email.header import Header
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 import requests
 from requests.utils import cookiejar_from_dict, dict_from_cookiejar
@@ -29,19 +29,19 @@ class Email_message:
         self.smtp_port = smtp_port
 
     def send_message(self, content: str) -> bool:
-        receiver_email = [self.receiver_email]
-
-        message = MIMEText(content, 'plain', 'utf-8')
-        message['Subject'] = Header("联想智选定时签到结果", "utf-8")
-        message['From'] = Header("联想智选定时签到程序", "utf-8")
-        message['To'] = receiver_email[0]
-
         try:
-            smtp = SMTP_SSL(self.smtp_server, self.smtp_port)
-            smtp.login(self.sender_email, self.sender_password)
-            smtp.sendmail(
-                self.sender_email, receiver_email, message.as_string())
-            smtp.quit()
+            message = MIMEMultipart()
+            message['Subject'] = Header("联想智选定时签到结果", "utf-8")
+            message['From'] = Header("联想智选定时签到程序", "utf-8")
+            message['To'] = self.receiver_email
+            msg_content = MIMEText(content, 'plain', 'utf-8')
+            message.attach(msg_content)
+
+            # Create secure connection with server and send email
+            context = ssl.create_default_context()
+            with smtplib.SMTP_SSL(self.smtp_server, self.smtp_port, context=context) as server:
+                server.login(self.sender_email, self.sender_password)
+                server.sendmail(self.sender_email, self.receiver_email, message.as_string())
             return True
         except smtplib.SMTPException as e:
             print('send email error', e)
