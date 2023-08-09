@@ -17,10 +17,10 @@ jobs:
       - name: Run Python script
         env: 
           ACCOUNT: ${{ secrets.ACCOUNT }}
-          sender_email: ${{ secrets.sender_email }}
-          sender_password: ${{ secrets.sender_password }}
-          receiver_email: ${{ secrets.receiver_email }}
-          smtp_server: ${{ secrets.smtp_server }}
-          smtp_port: ${{ secrets.smtp_port }}
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
+          RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
+          SMTP_SERVER: ${{ secrets.SMTP_SERVER }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
         run: |
           python3 ./github_action.py
