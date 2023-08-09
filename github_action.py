@@ -32,7 +32,7 @@ class Email_message:
         try:
             message = MIMEMultipart()
             message['Subject'] = Header("联想智选定时签到结果", "utf-8")
-            message['From'] = Header("联想智选定时签到程序", "utf-8")
+            message['From'] = self.sender_email
             message['To'] = self.receiver_email
             msg_content = MIMEText(content, 'plain', 'utf-8')
             message.attach(msg_content)
