@@ -1,0 +1,26 @@
+on:
+  schedule:
+  - cron: '35 1,13 * * *'
+jobs:
+  sign:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install Requirements
+        run: |
+          python -m pip install --upgrade pip
+          pip3 install -r requirements.txt
+      - name: Run Python script
+        env: 
+          ACCOUNT: ${{ secrets.ACCOUNT }}
+          sender_email: ${{ secrets.sender_email }}
+          sender_password: ${{ secrets.sender_password }}
+          receiver_email: ${{ secrets.receiver_email }}
+          smtp_server: ${{ secrets.smtp_server }}
+          smtp_port: ${{ secrets.smtp_port }}
+        run: |
+          python3 ./github_action.py
