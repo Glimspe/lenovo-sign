@@ -24,7 +24,7 @@ jobs:
 
       - name: Sleep for Random Time
         run: |
-          sleep ${ { steps.wait.outputs.minutes }}m
+          sleep ${{steps.wait.outputs.minutes}}m
 
       - name: Run Python script
         env: 
