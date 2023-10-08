@@ -28,10 +28,10 @@ class Email_message:
         self.smtp_server = smtp_server
         self.smtp_port = smtp_port
 
-    def send_message(self, content: str) -> bool:
+    def send_message(self, header: str, content: str) -> bool:
         try:
             message = MIMEMultipart()
-            message['Subject'] = Header("联想智选定时签到结果", "utf-8")
+            message['Subject'] = Header(f"联想智选定时签到{header}", "utf-8")
             message['From'] = self.sender_email
             message['To'] = self.receiver_email
             msg_content = MIMEText(content, 'plain', 'utf-8')
@@ -122,7 +122,7 @@ def sign(session):
 
 
 def main():
-    global ua, username, config
+    global ua, username
     message = "联想签到: \n"
     if not (ua := os.environ.get('UA')):
         ua = random.choice(USER_AGENT)
@@ -139,7 +139,11 @@ def main():
         print("No ACCOUNT secret found.")
     smtp = Email_message(os.environ['SENDER_EMAIL'], os.environ['SENDER_PASSWORD'], os.environ['RECEIVER_EMAIL'],
                          os.environ['SMTP_SERVER'], int(os.environ['SMTP_PORT']))
-    smtp.send_message(message)
+    if "已经签到" in message:
+        header = "失败"
+    else:
+        header = "成功"
+    smtp.send_message(header, message)
 
 
 if __name__ == "__main__":
