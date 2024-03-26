@@ -176,7 +176,7 @@ def login(username, password):
 
 def sign(session):
     res = session.get(url="https://mclub.lenovo.com.cn/signlist/")
-    token = re.findall('token\s=\s"(.*?)"', res.text)[0]
+    token = re.findall('token\s*=\s*"(.*?)"', res.text)[0]
     data = f"_token={token}&memberSource=1"
     headers = {
         "Host": "mclub.lenovo.com.cn",
