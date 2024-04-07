@@ -125,15 +125,7 @@ def main():
             if not session:
                 continue
             message += sign(session)
-    else:
-        print("No ACCOUNT secret found.")
-    smtp = Email_message(os.environ['SENDER_EMAIL'], os.environ['SENDER_PASSWORD'], os.environ['RECEIVER_EMAIL'],
-                         os.environ['SMTP_SERVER'], int(os.environ['SMTP_PORT']))
-    if "已经签到" in message:
-        header = "失败"
-    else:
-        header = "成功"
-    smtp.send_message(header, message)
+  push(message)
 
 
 if __name__ == "__main__":
