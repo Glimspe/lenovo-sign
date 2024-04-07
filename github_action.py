@@ -37,6 +37,13 @@ class Push_messages:
             )
             return True if result.json().get("code") == 0 else False
 
+def set_push_type():
+    for type, key in config.get("message_push").items():
+        key_list = key.values()
+        if "".join(key_list):
+            return getattr(Push_messages(), type)(*key_list).send_message
+    else:
+        return logger
 
 def login(username, password):
     def get_cookie():
