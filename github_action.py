@@ -113,6 +113,7 @@ def sign(session):
 
 def main():
     global ua, username
+    push = set_push_type()
     message = "联想签到: \n"
     if not (ua := os.environ.get('UA')):
         ua = random.choice(USER_AGENT)
@@ -125,7 +126,7 @@ def main():
             if not session:
                 continue
             message += sign(session)
-  push(message)
+        push(message)
 
 
 if __name__ == "__main__":
