@@ -1,3 +1,5 @@
+name:github_action
+
 on:
   workflow_dispatch:
   schedule:
