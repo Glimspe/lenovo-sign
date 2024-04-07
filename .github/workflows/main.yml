@@ -38,4 +38,4 @@ jobs:
           SMTP_SERVER: ${{ secrets.SMTP_SERVER }}
           SMTP_PORT: ${{ secrets.SMTP_PORT }}
         run: |
-          python3 ./github_action.py
+          python3 ./lenovo_sign.py
