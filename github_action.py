@@ -19,33 +19,23 @@ USER_AGENT = [
 ]
 
 
-class Email_message:
-    def __init__(self, sender_email: str, sender_password: str, receiver_email: str, smtp_server: str,
-                 smtp_port: int) -> None:
-        self.sender_email = sender_email
-        self.sender_password = sender_password
-        self.receiver_email = receiver_email
-        self.smtp_server = smtp_server
-        self.smtp_port = smtp_port
+class Push_messages:
+    class Server_chan:
+        def __init__(self, send_key: str) -> None:
+            self.send_key = send_key
 
-    def send_message(self, header: str, content: str) -> bool:
-        try:
-            message = MIMEMultipart()
-            message['Subject'] = Header(f"联想智选定时签到{header}", "utf-8")
-            message['From'] = self.sender_email
-            message['To'] = self.receiver_email
-            msg_content = MIMEText(content, 'plain', 'utf-8')
-            message.attach(msg_content)
-
-            # Create secure connection with server and send email
-            context = ssl.create_default_context()
-            with smtplib.SMTP_SSL(self.smtp_server, self.smtp_port, context=context) as server:
-                server.login(self.sender_email, self.sender_password)
-                server.sendmail(self.sender_email, self.receiver_email, message.as_string())
-            return True
-        except smtplib.SMTPException as e:
-            print('send email error', e)
-            return False
+        def send_message(self, content: str) -> bool:
+            data = {"title": "联想签到", "desp": content}
+            response = requests.post(
+                f"https://sctapi.ftqq.com/{self.send_key}.send", data=data
+            )
+            res_data = response.json().get("data")
+            pushid = res_data.get("pushid")
+            readkey = res_data.get("readkey")
+            result = requests.get(
+                f"https://sctapi.ftqq.com/push?id={pushid}&readkey={readkey}"
+            )
+            return True if result.json().get("code") == 0 else False
 
 
 def login(username, password):
